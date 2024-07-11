@@ -1,5 +1,9 @@
 #include <iostream>
-#include <span>
+#include <tuple>
+#include <chrono>
+#include <cmath>
+
+#include "span.hpp"
 
 #include "minictc.h"
 
@@ -150,7 +154,7 @@ int main(int argc, const char *const *const argv) {
 
     for (int b = 0; b != batch_size; ++b) {
       std::cout << "batch=" << b << ", loss=" << loss[b] << "\n";
-      printmtx(std::span(grad.data() + b * (K * T), K * T), K, T, "grad");
+      printmtx(tcb::span(grad.data() + b * (K * T), K * T), K, T, "grad");
     }
   }
 
