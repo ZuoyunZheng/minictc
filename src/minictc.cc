@@ -1,4 +1,6 @@
 #include <cmath>
+#include <cassert>
+#include <iostream>
 #include <tuple>
 
 #include "minictc.h"
@@ -164,11 +166,15 @@ void compute_ctc_grad_single(
     grad[i] = std::exp(logprobs[i]);
   }
 
+  float Z_t_buffer = 0;
   for (int t = 0; t != num_frames; ++t) {
     float Z_t = 0;
     for (int s = 0; s != path_len; ++s) {
       Z_t += std::exp(gamma[s + path_len * t] - logprobs[target_blank[s] + num_tokens * t]);
     }
+    if (t == 0) Z_t_buffer = Z_t;
+    else assert(fabs(Z_t_buffer-Z_t) < std::numeric_limits<float>::epsilon());
+    std::cout << Z_t << std::endl;
 
     for (int k = 0; k != num_tokens; ++k) {
       float sum_alpha_beta_s_t = 0;
